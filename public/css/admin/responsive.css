@@ -1,0 +1,11 @@
+
+/* SMALL DEVICES */
+@media all and (max-width: 500px) {
+    .res-img{
+        width: 150px;
+    }
+
+    /* .toggler{
+        padding: 50px;
+    } */
+}
