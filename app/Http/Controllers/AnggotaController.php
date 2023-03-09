@@ -37,7 +37,7 @@ class AnggotaController extends Controller
     public function getData(Request $request) {
         $find = $request->input('nama_anggota');
         $hasil = User::where('nama_lengkap','LIKE', '%' . $find .'%')->get();
-        return view('anggota.search',compact('hasil'), [
+        return view('admin.anggota.search',compact('hasil'), [
             'title' => 'Hasil Search',
             'data' => $hasil
         ])->with('message', 'Maaf Data yang anda cari Kosong');
