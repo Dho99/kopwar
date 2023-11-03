@@ -91,7 +91,10 @@
 @endif
 <!-- ./wrapper -->
 
-<script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+<script
+  src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+  crossorigin="anonymous"></script>
 <script src="{{ asset('plugins/jquery-ui/jquery-ui.min.js') }}"></script>
 <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 <script src="{{ asset('plugins/jquery-knob/jquery.knob.min.js') }}"></script>
@@ -150,8 +153,9 @@
 
         //Initialize Select2 Elements
         $('.select2bs4').select2({
-            theme: 'bootstrap4'
-        })
+            theme: 'bootstrap4',
+            tags:true
+        });
     });
 
     @if (session()->has('message'))
@@ -195,7 +199,7 @@
                     updateTable('#records', data.pinjamans,
                         [{
                                 "title": "No.",
-                                "data": "pinjam_id",
+                                "data": null,
                                 render: function(data, type, row, meta) {
                                     return meta.row + meta.settings._iDisplayStart + 1;
                                 }

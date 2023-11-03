@@ -38,7 +38,7 @@
                 </div>
                 <input type="text" class="form-control" required name="jumlah">
             </div>
-            
+
             <input type="hidden" name="category" value="Simpanan">
             {{-- <input type="hidden" name="user_id" value="{{ auth()->user()->user_id }}"> --}}
 

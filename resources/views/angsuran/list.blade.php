@@ -42,7 +42,7 @@
                             <td>{{ $item['nama_lengkap'] }}</td>
                             <td>{{ $item['kode_pinjaman'] }}</td>
                             <td>@currency($item['terbayar'])</td>
-                            @if ($item['sisa'] == 0)
+                            @if ($item['sisa'] === 0)
                                 <td class="text-success">@currency($item['sisa'])</td>
                             @else
                                 <td class="text-danger">@currency($item['jumlah'] - $item['terbayar'])</td>

@@ -17,20 +17,22 @@ class AngsuranController extends Controller
     public function index()
     {
         $angsuran = Angsuran::groupBy('pinjam_id')->sum('terbayar');
-        $pinjaman = Pinjaman::groupBy('kode_pinjaman')->sum('jumlah');
+        $pinjaman = Pinjaman::sum('jumlah');
         $list = Angsuran::with('user')->groupBy('pinjam_id')->get();
+        // dd($pinjaman);
         $lists = [];
         foreach ($list as $item){
             $lists[] = [
                 'id' => $item->id,
                 'nama_lengkap' => $item->user->nama_lengkap,
                 'kode_pinjaman' => $item->pinjam->kode_pinjaman,
-                'terbayar' => $angsuran,
-                'jumlah' => $pinjaman,
-                'sisa' => $pinjaman - $angsuran,
+                'terbayar' => (int)$item->pinjam->terbayar,
+                'jumlah' => $item->pinjam->jumlah,
+                'sisa' => $item->pinjam->jumlah - $item->pinjam->terbayar,
                 'created_at' => $item->created_at,
             ];
         }
+
         $data = $angsuran - $pinjaman;
         return view('angsuran.list', [
             'title' => 'Angsuran',
@@ -154,48 +156,55 @@ class AngsuranController extends Controller
     public function store(Request $request)
     {
         if (auth()->user()->level === 'Pengurus') {
-            $data = Angsuran::create([
-                'pinjam_id' => $request->id,
-                'user_id' => $request->user_id,
-                'terbayar' => $request->terbayar,
-            ]);
-
             $dpinj = Pinjaman::where('id', $request->id)->first();
-            $dpinj->update([
-                'terbayar' => $dpinj->terbayar += $request->terbayar
-            ]);
+            if((int)$dpinj->rencana_bayar > (int)$request->terbayar || (int)$request->terbayar > (int)$dpinj->jumlah || $request->terbayar === 0 || !isset($request->terbayar))
+            {
+                return redirect('/newAngsuran')->with('message', 'Tidak memenuhi kriteria transaksi');
+            }else
+            {
+                $data = Angsuran::create([
+                    'pinjam_id' => $request->id,
+                    'user_id' => $request->user_id,
+                    'terbayar' => $request->terbayar,
+                ]);
 
-            Log::create([
-                'kode_anggota' => auth()->user()->kode_anggota,
-                'nama_lengkap' => auth()->user()->nama_lengkap,
-                'level' => (auth()->user()->level === 'Pengurus' ? 'Pengurus' : 'Anggota'),
-                'aktivitas' => 'Membuat transaksi Angsuran untuk Pinjaman ' . $data->pinjam['kode_pinjaman'],
-            ]);
+                $dpinj->update([
+                    'terbayar' => $dpinj->terbayar += $request->terbayar
+                ]);
 
-            return redirect()
-                ->intended('/angsuran')
-                ->with('success', 'Data berhasil Disimpan');
-        } else {
-            $data = Pengajuan::create([
-                'pinjam_id' => $request->pinjam_id,
-                'user_id' => $request->user_id,
-                'kode_pinjaman' => $request->kode_pinjaman,
-                'terbayar' => $request->terbayar,
-                'category' => 'Angsuran',
-            ]);
+                Log::create([
+                    'kode_anggota' => auth()->user()->kode_anggota,
+                    'nama_lengkap' => auth()->user()->nama_lengkap,
+                    'level' => (auth()->user()->level === 'Pengurus' ? 'Pengurus' : 'Anggota'),
+                    'aktivitas' => 'Membuat transaksi Angsuran untuk Pinjaman ' . $data->pinjam['kode_pinjaman'],
+                ]);
 
-            Log::create([
-                'kode_anggota' => auth()->user()->kode_anggota,
-                'nama_lengkap' => auth()->user()->nama_lengkap,
-                'level' => (auth()->user()->level === 'Pengurus' ? 'Pengurus' : 'Anggota'),
-                'aktivitas' => 'Membuat Prngajuan Angsuran untuk Pinjaman ' . $data->pinjam['kode_pinjaman'],
-            ]);
+                return redirect()
+                    ->intended('/angsuran')
+                    ->with('success', 'Data berhasil Disimpan');
+            }
+        }else {
+                $data = Pengajuan::create([
+                    'pinjam_id' => $request->pinjam_id,
+                    'user_id' => $request->user_id,
+                    'kode_pinjaman' => $request->kode_pinjaman,
+                    'terbayar' => $request->terbayar,
+                    'category' => 'Angsuran',
+                ]);
+
+                Log::create([
+                    'kode_anggota' => auth()->user()->kode_anggota,
+                    'nama_lengkap' => auth()->user()->nama_lengkap,
+                    'level' => (auth()->user()->level === 'Pengurus' ? 'Pengurus' : 'Anggota'),
+                    'aktivitas' => 'Membuat Prngajuan Angsuran untuk Pinjaman ' . $data->pinjam['kode_pinjaman'],
+                ]);
 
 
-            return redirect()
-                ->intended('/user/angsuran/' . auth()->user()->user_id)
-                ->with('success', 'Data berhasil Disimpan, Tunggu Konfirmasi dari Pengurus.');
+                return redirect()
+                    ->intended('/user/angsuran/' . auth()->user()->user_id)
+                    ->with('success', 'Data berhasil Disimpan, Tunggu Konfirmasi dari Pengurus.');
         }
+
     }
 
     /**

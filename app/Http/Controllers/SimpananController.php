@@ -18,18 +18,17 @@ class SimpananController extends Controller
      */
     public function index()
     {
-        $umrah = Simpanan::where('id_jenis_simpanan', '5')->sum('jumlah');
-        $hariRaya = Simpanan::where('id_jenis_simpanan', '4')->sum('jumlah');
-        $pokok = Simpanan::where('id_jenis_simpanan', '2')->sum('jumlah');
-        $wajib = Simpanan::where('id_jenis_simpanan', '1')->sum('jumlah');
-        $wisata = Simpanan::where('id_jenis_simpanan', '3')->sum('jumlah');
+        $categories = JenisSimpanan::all();
+        $simpanans = [];
+        foreach($categories as $item){
+            $simpanans[] = [
+                'categoryName' => $item->jenis_simpanan,
+                'jumlah' => Simpanan::where('id_jenis_simpanan', $item->id_jenis_simpanan)->sum('jumlah')
+            ];
+        }
         return view('simpanan.list', [
-            'umrah' => $umrah,
-            'hariRaya' => $hariRaya,
-            'pokok' => $pokok,
-            'wisata' => $wisata,
-            'wajib' => $wajib,
             'title' => 'Simpanan',
+            'categories' => $simpanans,
             'list' => Simpanan::with('user', 'category')
                 ->latest()
                 ->get(),
@@ -41,21 +40,23 @@ class SimpananController extends Controller
 
     public function userIndex($id)
     {
-        $umrah = Simpanan::where(['id_jenis_simpanan' => '5', 'user_id' => $id])->sum('jumlah');
-        $hariRaya = Simpanan::where(['id_jenis_simpanan' => '4', 'user_id' => $id])->sum('jumlah');
-        $pokok = Simpanan::where(['id_jenis_simpanan' => '2', 'user_id' => $id])->sum('jumlah');
-        $wajib = Simpanan::where(['id_jenis_simpanan' => '1', 'user_id' => $id])->sum('jumlah');
-        $wisata = Simpanan::where(['id_jenis_simpanan' => '3', 'user_id' => $id])->sum('jumlah');
+        $categories = JenisSimpanan::all();
+        $datas = [];
+        foreach($categories as $item){
+            $datas[] = [
+                'categoryName' => $item->jenis_simpanan,
+                'jumlah' => Simpanan::where([
+                    'id_jenis_simpanan' => $item->id_jenis_simpanan,
+                    'user_id' => $id
+                ])->sum('jumlah')
+                ];
+        }
+
         return view('user.simpanan.list', [
-            'umrah' => $umrah,
-            'hariRaya' => $hariRaya,
-            'pokok' => $pokok,
-            'wisata' => $wisata,
-            'wajib' => $wajib,
             'title' => 'Simpanan',
+            'categories' => $datas,
             'list' => Simpanan::where('user_id', $id)
                 ->with('user', 'category')
-                // ->groupBy('id_jenis_simpanan')
                 ->latest()
                 ->get(),
             'notConfirmed' => Pengajuan::where(['status' => 'Pending', 'category' => 'Simpanan', 'user_id' => $id])
@@ -259,7 +260,7 @@ class SimpananController extends Controller
             'jumlah' => $request->jumlah,
             'periode' => $request->periode,
         ]);
-        
+
         Log::create([
             'kode_anggota' => auth()->user()->kode_anggota,
             'nama_lengkap' => auth()->user()->nama_lengkap,

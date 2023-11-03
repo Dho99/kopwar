@@ -3,80 +3,19 @@
     <div class="card">
         <div class="card-body">
             <div class="row">
+                @foreach($categories as $item)
                 <div class="col-lg-3 col-6">
                     <!-- small box -->
                     <div class="small-box bg-teal disabled">
                         <div class="inner">
-                            <h3>@currency($pokok)</h3>
+                            <h3>@currency($item['jumlah'])</h3>
 
-                            <p>Simpanan Pokok</p>
+                            <p>{{$item['categoryName']}}</p>
                         </div>
-                        <div class="icon">
-                            <i class="fa-solid fa-vault"></i>
-                        </div>
-                        <a href="/anggota" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                        <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-teal disabled">
-                        <div class="inner">
-                            <h3>@currency($hariRaya)</h3>
-
-                            <p>Simpanan Hari Raya</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa-solid fa-gift"></i>
-                        </div>
-                        <a href="/anggota" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-teal disabled">
-                        <div class="inner">
-                            <h3>@currency($wajib)</h3>
-
-                            <p>Simpanan Wajib</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa-solid fa-money-bill-trend-up"></i>
-                        </div>
-                        <a href="/anggota" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-teal disabled">
-                        <div class="inner">
-                            <h3>@currency($wisata)</h3>
-
-                            <p>Simpanan Wisata</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa-solid fa-plane-departure"></i>
-                        </div>
-                        <a href="/anggota" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-teal disabled">
-                        <div class="inner">
-                            <h3>@currency($umrah)</h3>
-
-                            <p>Simpanan Umrah</p>
-                        </div>
-                        <div class="icon">
-                            <i class="fa-solid fa-kaaba"></i>
-                        </div>
-                        <a href="/anggota" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>

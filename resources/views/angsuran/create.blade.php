@@ -70,7 +70,7 @@
                     <div class="input-group-prepend">
                     <span class="input-group-text"><b>Jumlah Bayar</b></span>
                     </div>
-                    <input type="text" class="form-control" value="{{$item->rencana_bayar}}" required name="terbayar">
+                    <input type="text" class="form-control" oninput="check()" value="{{$item->rencana_bayar}}" required name="terbayar">
                 </div>
 
                 <div class="row py-3">
@@ -88,4 +88,5 @@
     </div>
 </div>
     <!-- /.card-body -->
+
 @endsection
