@@ -6,13 +6,14 @@
     </div>
     <!-- /.card-header -->
     <div class="card-body">
-        @foreach ($datas as $item)           
-       
+        {{-- @dd($datas) --}}
+        @foreach ($datas as $item)
+
             <form action="/createAngsuran" method="POST">
                 @csrf
                 <input type="hidden" name="user_id" value="{{$item->user_id}}">
                 {{-- <input type="hidden" name="anggota_id" value="{{$item->anggota_id}}"> --}}
-                <input type="hidden" name="pinjam_id" value="{{$item->pinjam_id}}">
+                <input type="hidden" name="id" value="{{$item->id}}">
                 <div class="input-group mb-3 mt-2">
                     <div class="input-group-prepend">
                     <span class="input-group-text"><b>Kode Pinjaman</b></span>
@@ -45,7 +46,7 @@
                     <div class="input-group-prepend">
                     <span class="input-group-text"><b>Rencana Bayar</b></span>
                     </div>
-                    <input type="text" class="form-control" readonly value="@currency($item->perbulan)" name="rencana">
+                    <input type="text" class="form-control" readonly value="@currency($item->rencana_bayar)" name="rencana">
                     <div class="input-group-prepend">
                     <span class="input-group-text rounded-right"><b>Perbulan</b></span>
                     </div>
@@ -69,7 +70,7 @@
                     <div class="input-group-prepend">
                     <span class="input-group-text"><b>Jumlah Bayar</b></span>
                     </div>
-                    <input type="text" class="form-control" value="@currency($item->rencana_bayar)" required name="terbayar">
+                    <input type="text" class="form-control" value="{{$item->rencana_bayar}}" required name="terbayar">
                 </div>
 
                 <div class="row py-3">

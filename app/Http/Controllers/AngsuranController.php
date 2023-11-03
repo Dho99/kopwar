@@ -17,13 +17,24 @@ class AngsuranController extends Controller
     public function index()
     {
         $angsuran = Angsuran::groupBy('pinjam_id')->sum('terbayar');
-        $pinjaman = Pinjaman::groupBy('pinjam_id')->sum('jumlah');
+        $pinjaman = Pinjaman::groupBy('kode_pinjaman')->sum('jumlah');
+        $list = Angsuran::with('user')->groupBy('pinjam_id')->get();
+        $lists = [];
+        foreach ($list as $item){
+            $lists[] = [
+                'id' => $item->id,
+                'nama_lengkap' => $item->user->nama_lengkap,
+                'kode_pinjaman' => $item->pinjam->kode_pinjaman,
+                'terbayar' => $angsuran,
+                'jumlah' => $pinjaman,
+                'sisa' => $pinjaman - $angsuran,
+                'created_at' => $item->created_at,
+            ];
+        }
         $data = $angsuran - $pinjaman;
         return view('angsuran.list', [
             'title' => 'Angsuran',
-            'list' => Angsuran::with('user')
-                ->latest()
-                ->get(),
+            'list' => $lists,
             'notConfirmed' => Pengajuan::where(['status' => 'Pending', 'category' => 'Angsuran'])
                 ->with('anggota', 'pinjam', 'user')
                 ->get(),
@@ -118,7 +129,7 @@ class AngsuranController extends Controller
     public function find(Request $request)
     {
         $data = Pinjaman::with('user', 'anggota')
-            ->where('pinjam_id', $request->pinjam_id)
+            ->where('id', $request->id)
             ->get();
         return view('angsuran.create', [
             'title' => 'Angsuran',
@@ -144,9 +155,14 @@ class AngsuranController extends Controller
     {
         if (auth()->user()->level === 'Pengurus') {
             $data = Angsuran::create([
-                'pinjam_id' => $request->pinjam_id,
+                'pinjam_id' => $request->id,
                 'user_id' => $request->user_id,
                 'terbayar' => $request->terbayar,
+            ]);
+
+            $dpinj = Pinjaman::where('id', $request->id)->first();
+            $dpinj->update([
+                'terbayar' => $dpinj->terbayar += $request->terbayar
             ]);
 
             Log::create([

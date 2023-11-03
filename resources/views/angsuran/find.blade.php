@@ -13,11 +13,11 @@
                 <div class="input-group-prepend">
                 <span class="input-group-text"><b>Kode Pinjaman</b></span>
                 </div>
-                    <select class="form-control select2bs4" name="pinjam_id">
+                    <select class="form-control select2bs4" name="id">
                     <option></option>
                     @foreach ($datas as $data)
                         @if ($data->jumlah - $data->terbayar > 0)
-                            <option value="{{$data->pinjam_id}}">{{$data->kode_pinjaman}} - {{$data->user->nama_lengkap}}</option>
+                            <option value="{{$data->id}}">{{$data->kode_pinjaman}} - {{$data->user->nama_lengkap}}</option>
                         @endif
                     @endforeach
                     </select>
@@ -32,7 +32,7 @@
                 </div>
             </div>
         </form>
-        
+
 
     </div>
 @endsection

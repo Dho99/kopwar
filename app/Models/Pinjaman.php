@@ -12,12 +12,13 @@ class Pinjaman extends Model
 {
     use HasFactory;
     protected $table = 'pinjamans';
-    protected $primaryKey = 'pinjam_id';
-    protected $guarded = ['pinjam_id'];
+    protected $primaryKey = 'id';
+    protected $guarded = ['id'];
     protected $fillable = [
         'kode_pinjaman',
         'user_id',
         'jumlah',
+        'terbayar',
         'keterangan',
         'rencana_bayar',
     ];

@@ -33,14 +33,14 @@
                 <div class="input-group-prepend">
                 <span class="input-group-text"><b>Jumlah Pinjam</b></span>
                 </div>
-                <input type="text" class="form-control" name="jumlah" required data-mask="currency">
+                <input type="text" class="form-control" name="jumlah" required >
             </div>
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                 <span class="input-group-text"><b>Rencana Bayar</b></span>
                 </div>
-                <input type="text" class="form-control" required name="rencana" data-mask="currency">
+                <input type="text" class="form-control" required name="rencana" >
                 <div class="input-group-prepend">
                     <span class="input-group-text rounded-right"><b>Perbulan</b></span>
                 </div>
