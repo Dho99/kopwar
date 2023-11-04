@@ -11,6 +11,13 @@
                 <input type="hidden" name="pinjam_id" value="{{ $item->pinjam_id }}">
                 <div class="input-group mb-3 mt-2">
                     <div class="input-group-prepend">
+                        <span class="input-group-text"><b>ID Angsuran</b></span>
+                    </div>
+                    <input type="text" class="form-control" value="{{ md5($item->id) }}" readonly
+                        name="kode_pinjaman">
+                </div>
+                <div class="input-group mb-3 mt-2">
+                    <div class="input-group-prepend">
                         <span class="input-group-text"><b>Kode Pinjaman</b></span>
                     </div>
                     <input type="text" class="form-control" value="{{ $item->pinjam->kode_pinjaman }}" readonly
@@ -63,14 +70,15 @@
                         <div class="col-md-6">
                             <a href="/angsuran" class="btn btn-outline-dark w-50">Kembali</a>
                         </div>
-                        <div class="col-md-6">
+                        {{-- <div class="col-md-6">
                             <a href="/deleteAngsuran/{{ $item->id }}"
                                 class="btn btn-outline-danger w-50 float-right">Delete </a>
-                        </div>
-                    @endif
+                        </div> --}}
+                    @else
                     <div class="col-md-6">
                         <a href="/user/angsuran/{{ auth()->user()->user_id }}" class="btn btn-outline-dark w-50">Kembali</a>
                     </div>
+                    @endif
                     @if ($item->pinjam->jumlah - $item->pinjam->terbayar === 0)
                     <div class="col-md-6">
                         <a href="/deleteAngsuran/{{ $item->id }}"

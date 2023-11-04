@@ -21,30 +21,32 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if ($notConfirmed != null)
-                        @foreach ($notConfirmed as $item)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $item->user->nama_lengkap }}</td>
-                                <td>{{ $item->pinjam->kode_pinjaman }}</td>
-                                <td>@currency($item->terbayar)</td>
-                                <td>@currency($item->pinjam->jumlah - $item->pinjam->terbayar - $item->terbayar)</td>
-                                <td>{{ $item->created_at->format('d-m-Y') }}</td>
-                                <td>Tunggu Konfirmasi</td>
-                            </tr>
-                        @endforeach
-                    @endif
+                    @foreach ($notConfirmed as $item)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $item->user->nama_lengkap }}</td>
+                            <td>{{ $item->kode_pinjaman }}</td>
+                            <td>@currency($item->terbayar)</td>
+                            @php
+                                $ss = \App\Models\Pengajuan::where('user_id', auth()->user()->user_id)->sum('terbayar');
+                                // dd($ss);
+                            @endphp
+                            <td class="{{$item->pinjam->jumlah > $ss ? 'text-danger' : ''}}">@currency($item->pinjam->jumlah - $ss)</td>
+                            <td>{{ $item->created_at->format('d-m-Y') }}</td>
+                            <td>Tunggu Konfirmasi</td>
+                        </tr>
+                    @endforeach
 
                     @foreach ($list as $item)
                         <tr>
                             <td>{{ $loop->iteration + count($notConfirmed) }}</td>
                             <td>{{ $item->user->nama_lengkap }}</td>
                             <td>{{ $item->pinjam->kode_pinjaman }}</td>
-                            <td>@currency($item->pinjam->terbayar)</td>
-                            @if ($item->pinjam->jumlah - $item->pinjam->terbayar === 0)
-                                <td class="text-success">@currency($item->pinjam->jumlah - $item->pinjam->terbayar)</td>
+                            <td>@currency($item->terbayar)</td>
+                            @if ($item->pinjam->jumlah === $item->terbayar)
+                                <td class="text-success">@currency($item->pinjam->jumlah - $item->terbayar)</td>
                             @else
-                                <td class="text-danger">@currency($item->pinjam->jumlah - $item->pinjam->terbayar)</td>
+                                <td class="text-danger">@currency($item->pinjam->jumlah - $item->terbayar)</td>
                             @endif
                             <td>{{ $item->created_at->format('d-m-Y') }}</td>
 

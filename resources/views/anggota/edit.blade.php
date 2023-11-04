@@ -59,11 +59,11 @@
                     </div>
                     <select name="level" class="form-control" id="">
                         @if ($data->level === 'Pengurus')
-                            <option value="Pengurus" selected>Pengurus</option>
-                            <option value="Anggota">Anggota</option>
+                            <option value="1" selected>Pengurus</option>
+                            <option value="0">Anggota</option>
                         @else
-                            <option value="Pengurus">Pengurus</option>
-                            <option value="Anggota" selected>Anggota</option>
+                            <option value="0">Pengurus</option>
+                            <option value="1" selected>Anggota</option>
                         @endif
                     </select>
                 </div>
@@ -81,7 +81,7 @@
                     <input type="submit" class="btn btn-outline-primary w-50" onclick="return confirm('Apakah data dimasukkan dengan Benar?')">
                 </div>
             </div>
-                            
+
             @endforeach
         </form>
 

@@ -13,7 +13,7 @@ class DashboardController extends Controller
 {
     // Pengurus
     public function index(){
-        $angsuran = Angsuran::sum('terbayar');
+        $angsuran = Pinjaman::sum('terbayar');
         $pinjaman = Pinjaman::sum('jumlah');
         return view('dashboard.index', [
             'title' => 'Dashboard',

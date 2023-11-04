@@ -53,7 +53,7 @@ class AngsuranController extends Controller
             ->groupBy('pinjam_id')
             ->sum('terbayar');
         $pinjaman = Pinjaman::where('user_id', $user_id)
-            ->groupBy('pinjam_id')
+            ->groupBy('id')
             ->sum('jumlah');
         $data = $angsuran - $pinjaman;
         // dd($data);
@@ -65,6 +65,7 @@ class AngsuranController extends Controller
                 // ->latest()
                 ->get(),
             'notConfirmed' => Pengajuan::where(['status' => 'Pending', 'category' => 'Angsuran', 'user_id' => $user_id])
+                // ->groupBy('kode_pinjaman')
                 ->with('pinjam', 'user')
                 ->get(),
             'hitung' => $data,
@@ -191,18 +192,19 @@ class AngsuranController extends Controller
             }
         }else {
                 $data = Pengajuan::create([
-                    'pinjam_id' => $request->pinjam_id,
+                    'pinjam_id' => $request->id,
                     'user_id' => $request->user_id,
                     'kode_pinjaman' => $request->kode_pinjaman,
                     'terbayar' => $request->terbayar,
                     'category' => 'Angsuran',
+                    'jumlah' => Pinjaman::where('id', $request->id)->pluck('jumlah')->first()
                 ]);
 
                 Log::create([
                     'kode_anggota' => auth()->user()->kode_anggota,
                     'nama_lengkap' => auth()->user()->nama_lengkap,
                     'level' => (auth()->user()->level === 'Pengurus' ? 'Pengurus' : 'Anggota'),
-                    'aktivitas' => 'Membuat Prngajuan Angsuran untuk Pinjaman ' . $data->pinjam['kode_pinjaman'],
+                    'aktivitas' => 'Membuat Prngajuan Angsuran untuk Pinjaman ' . $data['kode_pinjaman'],
                 ]);
 
 
@@ -264,4 +266,3 @@ class AngsuranController extends Controller
             ->with('success', 'Data berhasil Dihapus');
     }
 }
-        

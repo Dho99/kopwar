@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Log;
 use App\Models\User;
 use App\Models\Anggota;
-use App\Models\Log;
 use App\Models\Pengajuan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class AnggotaController extends Controller
 {
@@ -50,34 +51,40 @@ class AnggotaController extends Controller
 
     public function storeAnggota(Request $request)
     {
-        $data = [
-            'kode_anggota' => 'A-' . mt_rand(100, 999),
-            'nama_lengkap' => $request->nama_lengkap,
-            'username' => $request->username,
-            'password' => bcrypt($request->password),
-            'status' => 'Aktif',
-            'level' => $request->level,
-        ];
-
-            if (User::where('kode_anggota', $data['kode_anggota'])->first()) {
-                return back()->with('message', 'Data yang dimasukkan sudah Ada !');
-            } else if (User::where('username', $data['username'])->first()){
-                return back()->with('message', 'Data yang dimasukkan sudah Ada !');
-            }else if (Anggota::where('username', $data['username'])->first()){
-                return back()->with('message', 'Data yang dimasukkan sudah Ada !');
-            }else{
-                User::create($data);
-                Log::create([
-                    'kode_anggota' => auth()->user()->kode_anggota,
-                    'nama_lengkap' => auth()->user()->nama_lengkap,
-                    'level' => (auth()->user()->level === 'Pengurus' ? '1' : '0'),
-                    'aktivitas' => 'Menambahkan data Anggota '.$data['kode_anggota'],
-                ]);
-                return redirect()
-                    ->intended('/anggota')
-                    ->with('success', 'Data berhasil Disimpan!');
+        $cekuser = User::where('kode_anggota', $request->kode_anggota)->first();
+        $cekusrname = User::where('username', $request->username)->first();
+        if(isset($cekuser) || isset($cekusrname)){
+            return back()->with('message', 'Data telah tersedia');
+        }else{
+            $data = [
+                'nama_lengkap' => $request->nama_lengkap,
+                'username' => $request->username,
+                'password' => $request->password,
+                'status' => 'Aktif',
+            ];
+            $validated = Validator::make($data, [
+                'nama_lengkap' => 'required|min:8|max:70',
+                'username' => 'required|min:8',
+                'password' => 'required|min:8',
+                'status' => 'required',
+            ]);
+            if($validated->fails()){
+                return back()->with('message', 'Data gagal ditambahkan karena tidak memenuhi syarat');
             }
-
+            $data['kode_anggota'] = 'A-'.mt_rand(0000,9999);
+            $data['level'] = '0';
+            $data['password'] = bcrypt($request->password);
+            User::create($data);
+            Log::create([
+                'kode_anggota' => auth()->user()->kode_anggota,
+                'nama_lengkap' => auth()->user()->nama_lengkap,
+                'level' => (auth()->user()->level === 'Pengurus' ? '1' : '0'),
+                'aktivitas' => 'Menambahkan data Anggota '.$data['kode_anggota'],
+            ]);
+            return redirect()
+                ->intended('/anggota')
+                ->with('success', 'Data berhasil Disimpan!');
+        }
     }
 
     public function store(Request $request)
@@ -95,7 +102,7 @@ class AnggotaController extends Controller
                 'password' => 'required|min:8',
                 'status' => 'required',
             ]);
-            $validator['level'] = auth()->user()->level === 'Pengurus' ? '1' : '0';
+            $validator['level'] = '1';
             $validator['kode_anggota'] = 'A-'.mt_rand(0000,9999);
             User::create($validator);
         }
@@ -172,7 +179,7 @@ class AnggotaController extends Controller
         ]);
 
         $values['password'] = bcrypt($request->password);
-        $values['level'] = auth()->user()->level == 'Pengurus' ? '1' : '0';
+        // $values['level'] = auth()->user()->level == 'Pengurus' ? '1' : '0';
 
         $data = User::where('user_id', $user_id)->update($values);
 

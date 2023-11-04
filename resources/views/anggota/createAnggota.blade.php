@@ -41,13 +41,14 @@
                     <option value="0" selected>Anggota</option>
                 </select>
 
-                <div class="row py-3">
-                    <div class="col-md-6">
-                        <a href="/anggota" class="btn btn-outline-dark w-50"
+                <div class="row py-3 d-flex">
+                    <div class="col-lg-4 col-md-5 col-sm-12 pb-2">
+                        <a href="/anggota" class="btn btn-outline-dark w-100"
                             onclick="return confirm('Apakah anda yakin? Perubahan tidak akan di Simpan!')">Kembali</a>
                     </div>
-                    <div class="col-md-6 text-right">
-                        <input type="submit" class="btn btn-outline-primary w-50"
+                    <div class="col-lg-2 col-md-2"></div>
+                    <div class="col-lg-4 col-md-5 col-sm-12 ml-auto">
+                        <input type="submit" class="btn btn-outline-primary w-100"
                             onclick="return confirm('Apakah data dimasukkan dengan Benar?')">
                     </div>
                 </div>
