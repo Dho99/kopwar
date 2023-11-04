@@ -166,22 +166,33 @@ class SimpananController extends Controller
     public function store(Request $request)
     {
         if (auth()->user()->level === 'Pengurus') {
-            $data = Simpanan::create([
-                'user_id' => $request->user_id,
-                'id_jenis_simpanan' => $request->id_jenis_simpanan,
-                'jumlah' => $request->jumlah,
-                'kode_simpanan' => 'SIMP-'.mt_rand(100000, 999999),
-            ]);
+            $ctrgsm = JenisSimpanan::where('id_jenis_simpanan', $request->id_jenis_simpanan)->first();
+                if(isset($ctrgsm)){
+                    $ctgrsmid = $ctrgsm->id_jenis_simpanan;
+                    $dsc = $ctrgsm->jenis_simpanan;
+                }else{
+                    $nctrgsm = JenisSimpanan::create([
+                        'jenis_simpanan' => $request->id_jenis_simpanan
+                    ]);
+                    $ctgrsmid = $nctrgsm->id_jenis_simpanan;
+                    $dsc = $nctrgsm->jenis_simpanan;
+                }
+                $data = Simpanan::create([
+                    'user_id' => $request->user_id,
+                    'id_jenis_simpanan' => $ctgrsmid,
+                    'jumlah' => $request->jumlah,
+                    'kode_simpanan' => 'SIMP-'.mt_rand(100000, 999999),
+                ]);
 
-            $items = JenisSimpanan::where('id_jenis_simpanan', $data['id_jenis_simpanan'])->get();
-            foreach ($items as $item) {
+            // $items = JenisSimpanan::where('id_jenis_simpanan', $data['id_jenis_simpanan'])->get();
+            // foreach ($items as $item) {
                 Log::create([
                     'kode_anggota' => auth()->user()->kode_anggota,
                     'nama_lengkap' => auth()->user()->nama_lengkap,
                     'level' => (auth()->user()->level === 'Pengurus' ? 'Pengurus' : 'Anggota'),
-                    'aktivitas' => 'Membuat Transaksi ' . $item->jenis_simpanan,
+                    'aktivitas' => 'Membuat Transaksi ' . $dsc,
                 ]);
-            }
+
             return redirect()
                 ->intended('/simpanan')
                 ->with('success', 'Data berhasil disimpan');

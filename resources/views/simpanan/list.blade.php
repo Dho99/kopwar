@@ -67,13 +67,13 @@
                                     title="Invoice" class="btn btn-outline-secondary"><i class="fa-solid fa-print"></i></a>
                                 <a href="/viewSimpanan/{{ $item->id }}" data-toggle="tooltip" data-placement="top"
                                     title="View" class="btn btn-outline-primary"><i class="fa-solid fa-eye"></i></a>
-                                <a href="/deleteSimpanan/{{ $item->id }}" data-toggle="tooltip" data-placement="top"
+                                {{-- <a href="/deleteSimpanan/{{ $item->id }}" data-toggle="tooltip" data-placement="top"
                                     title="Delete" class="btn btn-outline-danger"
                                     onclick="return confirm('Apakah anda yakin menghapus Data ini?')"><i
                                         class="fa-solid fa-trash-can"></i></a>
                                 <a href="/editSimpanan/{{ $item->id }}" data-toggle="tooltip" data-placement="top"
                                     title="Edit" class="btn btn-outline-secondary"><i
-                                        class="fa-regular fa-pen-to-square"></i></a>
+                                        class="fa-regular fa-pen-to-square"></i></a> --}}
                             </td>
                         </tr>
                     @endforeach

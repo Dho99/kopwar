@@ -35,7 +35,7 @@
                         @endif
                     </tr>
 
-                    @foreach ($list as $item)
+                    @forelse ($list as $item)
                         {{-- @dd($item) --}}
                         <tr>
                             <td>{{ $loop->iteration + count($notConfirmed) }}</td>
@@ -53,13 +53,20 @@
                                     title="Invoice" class="btn btn-outline-secondary"><i class="fa-solid fa-print"></i></a>
                                 <a href="/viewAngsuran/{{ $item['id'] }}" data-toggle="tooltip" data-placement="top"
                                     title="View" class="btn btn-outline-primary"><i class="fa-solid fa-eye"></i></a>
+                                @if($item['terbayar'] < $item['sisa'])
+                                <a href="/directAngsuran/{{ $item['id'] }}" data-toggle="tooltip" data-placement="top"
+                                    title="Bayar" class="btn btn-outline-secondary"><i
+                                        class="fa-solid fa-money-bill-1"></i></a>
+                                @else
                                 <a href="/deleteAngsuran/{{ $item['id'] }}" data-toggle="tooltip" data-placement="top"
                                     title="Delete" class="btn btn-outline-danger"
                                     onclick="return confirm('Apakah anda yakin menghapus Data ini?')"><i
                                         class="fa-solid fa-trash-can"></i></a>
+                                @endif
                             </td>
                         </tr>
-                    @endforeach
+                        @empty
+                    @endforelse
                 </tbody>
                 <tfoot>
                     <tr>

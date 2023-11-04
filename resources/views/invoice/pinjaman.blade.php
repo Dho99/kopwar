@@ -17,7 +17,7 @@
         <div class="row mb-3">
           <div class="col-12">
             <h4>
-              <img src="{{asset('dist/img/Logo Koperasi.png')}}" class="img-fluid col-1 d-inline-flex" alt=""> 
+              <img src="{{asset('dist/img/Logo Koperasi.png')}}" class="img-fluid col-1 d-inline-flex" alt="">
                 <span class="font-weight-bold align-items-center">
                   INVOICE
                 </span>
@@ -48,7 +48,7 @@
           <div class="col-sm-4 invoice-col">
             <b>Invoice </b>{{$item->kode_pinjaman }}<br>
             {{-- <br> --}}
-            <b>Pinjaman ID:</b> {{$item->pinjam_id}}<br>
+            <b>Pinjaman ID:</b> {{md5($item->id)}}<br>
             {{-- <b>Payment Due:</b> 2/22/2014<br> --}}
             <b>Kode Anggota:</b> {{$item->user->kode_anggota}}
           </div>
@@ -81,10 +81,10 @@
                     <td class="text-danger">Belum Lunas</td>
                     @else
                     <td class="text-success">Lunas</td>
-                    
+
                 @endif
               </tr>
-  
+
               </tbody>
             </table>
           </div>
@@ -106,7 +106,7 @@
             </p>
           </div>
           <!-- /.col -->
-      
+
           <!-- /.col -->
         </div>
         <!-- /.row -->
@@ -128,5 +128,5 @@
       <!-- /.invoice -->
     </div><!-- /.col -->
   </div>
-  
+
 @endsection

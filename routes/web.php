@@ -90,7 +90,7 @@ Route::post('/createPinjaman', [PinjamanController::class, 'store'])->middleware
 Route::get('/deletePinjaman/{pinjam_id}', [PinjamanController::class, 'destroy'])->middleware('auth');
 Route::get('/editPinjaman/{pinjam_id}', [PinjamanController::class, 'show'])->middleware('auth');
 Route::post('/updatePinjaman/{pinjam_id}', [PinjamanController::class, 'update'])->middleware('auth');
-Route::get('/viewPinjaman/{pinjam_id}', [PinjamanController::class, 'view'])->middleware('auth');
+Route::get('/viewPinjaman/{id}', [PinjamanController::class, 'view'])->middleware('auth');
 
 // publicSimpananLinks
 Route::get('/newSimpanan', [SimpananController::class, 'create'])->middleware('auth');

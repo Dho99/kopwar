@@ -18,9 +18,12 @@ class AngsuranController extends Controller
     {
         $angsuran = Angsuran::groupBy('pinjam_id')->sum('terbayar');
         $pinjaman = Pinjaman::sum('jumlah');
-        $list = Angsuran::with('user')->groupBy('pinjam_id')->get();
+        $list = Angsuran::with('user')->whereHas('pinjam', function($query){
+            $query->whereNotNull('kode_pinjaman');
+        })->groupBy('pinjam_id')->get();
         // dd($pinjaman);
         $lists = [];
+        // dd($list);
         foreach ($list as $item){
             $lists[] = [
                 'id' => $item->id,
@@ -86,6 +89,9 @@ class AngsuranController extends Controller
                 $end_date = Carbon::parse($request->to_date)->subDays(-1);
                 if ($end_date >= $start_date) {
                     $data = Angsuran::with('user', 'pinjam')
+                        ->whereHas('pinjam', function($query){
+                            $query->whereNotNull('kode_pinjaman');
+                        })
                         ->whereBetween('created_at', [$start_date, $end_date])
                         ->get();
                 } else {
@@ -142,7 +148,7 @@ class AngsuranController extends Controller
     public function directAngsuran($pinjam_id)
     {
         $data = Pinjaman::with('user', 'anggota')
-            ->where('pinjam_id', $pinjam_id)
+            ->where('id', $pinjam_id)
             ->get();
         return view('angsuran.create', [
             'title' => 'Angsuran',
@@ -258,3 +264,4 @@ class AngsuranController extends Controller
             ->with('success', 'Data berhasil Dihapus');
     }
 }
+        

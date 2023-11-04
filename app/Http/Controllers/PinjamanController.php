@@ -169,11 +169,11 @@ class PinjamanController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function view($pinjam_id)
+    public function view($id)
     {
         return view('pinjaman.view', [
             'title' => 'Pinjaman',
-            'datas' => Pinjaman::where('pinjam_id', $pinjam_id)
+            'datas' => Pinjaman::where('id', $id)
                 ->with('user')
                 ->get(),
         ]);
@@ -181,9 +181,10 @@ class PinjamanController extends Controller
 
     public function invoice($pinjam_id)
     {
+
         return view('invoice.pinjaman', [
             'title' => 'Invoice',
-            'datas' => Pinjaman::where('pinjam_id', $pinjam_id)
+            'datas' => Pinjaman::where('id', $pinjam_id)
                 ->with('user', 'anggota')
                 ->get(),
         ]);
@@ -219,7 +220,7 @@ class PinjamanController extends Controller
      */
     public function destroy($pinjam_id)
     {
-        $data = Pinjaman::where('pinjam_id', $pinjam_id)->get();
+        $data = Pinjaman::where('id', $pinjam_id)->get();
         foreach ($data as $item) {
 
             Log::create([
@@ -229,7 +230,7 @@ class PinjamanController extends Controller
                 'aktivitas' => 'Menghapus data Pinjaman ' . $item->kode_pinjaman,
             ]);
         }
-        Pinjaman::where('pinjam_id', $pinjam_id)->delete();
+        Pinjaman::where('id', $pinjam_id)->delete();
         return redirect()
             ->intended('/pinjaman')
             ->with('success', 'Data berhasil Dihapus');
