@@ -30,13 +30,6 @@
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text"><b>Password</b></span>
-                    </div>
-                    <input type="text" class="form-control" readonly value="{{ $item->password }}">
-                </div>
-
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
                         <span class="input-group-text"><b>Status</b></span>
                     </div>
                     <input type="text" class="form-control" readonly value="{{ $item->status }}">

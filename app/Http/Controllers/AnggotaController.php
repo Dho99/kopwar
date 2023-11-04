@@ -70,7 +70,7 @@ class AnggotaController extends Controller
                 Log::create([
                     'kode_anggota' => auth()->user()->kode_anggota,
                     'nama_lengkap' => auth()->user()->nama_lengkap,
-                    'level' => (auth()->user()->level === 'Pengurus' ? 'Pengurus' : 'Anggota'),
+                    'level' => (auth()->user()->level === 'Pengurus' ? '1' : '0'),
                     'aktivitas' => 'Menambahkan data Anggota '.$data['kode_anggota'],
                 ]);
                 return redirect()
@@ -82,33 +82,32 @@ class AnggotaController extends Controller
 
     public function store(Request $request)
     {
-        $data = [
-            'kode_anggota' => 'A-' . mt_rand(100, 999),
-            'nama_lengkap' => $request->nama_lengkap,
-            'username' => $request->username,
-            'password' => bcrypt($request->password),
-            'status' => 'Aktif',
-            'level' => $request->level,
-        ];
-
-            if (User::where('kode_anggota', $data['kode_anggota'])->first()) {
-                return back()->with('message', 'Data yang dimasukkan sudah Ada !');
-            } else if (Anggota::where('username', $data['username'])->first()){
-                return back()->with('message', 'Data yang dimasukkan sudah Ada !');
-            } else if (User::where('username', $data['username'])->first()){
-                return back()->with('message', 'Data yang dimasukkan sudah Ada !');
-            }else {
-                User::create($data);
-                Log::create([
-                    'kode_anggota' => auth()->user()->kode_anggota,
-                    'nama_lengkap' => auth()->user()->nama_lengkap,
-                    'level' => (auth()->user()->level === 'Pengurus' ? 'Pengurus' : 'Anggota'),
-                    'aktivitas' => 'Menambahkan data Anggota '.$data['kode_anggota'],
-                ]);
-                return redirect()
-                    ->intended('/pengurus')
-                    ->with('success', 'Data berhasil Disimpan!');
-            }
+        $check = User::where('kode_anggota', $request->kode_anggota)->first();
+        $ckusnme = User::where('username', $request->username)->first();
+        if(isset($check->kode_anggota)){
+            return back()->with('message','Tidak dapat menambahkan data');
+        }elseif(isset($ckusnme->username)){
+            return back()->with('message','Tidak dapat menambahkan data');
+        }else{
+            $validator = $request->validate([
+                'nama_lengkap' => 'required',
+                'username' => 'required|min:8',
+                'password' => 'required|min:8',
+                'status' => 'required',
+            ]);
+            $validator['level'] = auth()->user()->level === 'Pengurus' ? '1' : '0';
+            $validator['kode_anggota'] = 'A-'.mt_rand(0000,9999);
+            User::create($validator);
+        }
+            Log::create([
+                'kode_anggota' => auth()->user()->kode_anggota,
+                'nama_lengkap' => auth()->user()->nama_lengkap,
+                'level' => (auth()->user()->level === 'Pengurus' ? 'Pengurus' : 'Anggota'),
+                'aktivitas' => 'Menambahkan data Anggota '.$data['kode_anggota'],
+            ]);
+            return redirect()
+                ->intended('/pengurus')
+                ->with('success', 'Data berhasil Disimpan!');
 
     }
 
@@ -163,21 +162,26 @@ class AnggotaController extends Controller
             'aktivitas' => 'Memperbarui data Anggota '.$request->kode_anggota. ' ( '.$request->nama_lengkap. ' )',
         ]);
 
-        $data = User::where('user_id', $user_id)->update([
-            'nama_lengkap' => $request->nama_lengkap,
-            'kode_anggota' => $request->kode_anggota,
-            'username' => $request->username,
-            'password' => $request->password,
-            'status' => $request->status,
-            'level' => $request->level,
+        $values = $request->validate([
+            'nama_lengkap' => 'required|min:8|max:70',
+            'kode_anggota' => 'required',
+            'username' => 'required|min:8',
+            'password' => 'required|min:8',
+            'status' => 'required',
+            'level' => 'required'
         ]);
+
+        $values['password'] = bcrypt($request->password);
+        $values['level'] = auth()->user()->level == 'Pengurus' ? '1' : '0';
+
+        $data = User::where('user_id', $user_id)->update($values);
 
         // foreach($data as $item)
         return redirect()
             ->intended('/pengurus')
             ->with('success', 'Data berhasil Diperbarui !');
         }
-        
+
         public function updateAnggota(Request $request, $user_id)
     {
             Log::create([
@@ -186,17 +190,19 @@ class AnggotaController extends Controller
                 'level' => (auth()->user()->level === 'Pengurus' ? 'Pengurus' : 'Anggota'),
                 'aktivitas' => 'Memperbarui data Anggota '.$request->kode_anggota.' ( '.$request->nama_lengkap. ' )',
             ]);
-            $data = User::where('user_id', $user_id)->update([
-                'nama_lengkap' => $request->nama_lengkap,
-                'kode_anggota' => $request->kode_anggota,
-                'username' => $request->username,
-                'password' => $request->password,
-                'status' => $request->status,
-                // 'level' => $request->level,
-            ]);
-            // dd($data);
 
-        // foreach($data as $item)
+            $values = $request->validate([
+                'nama_lengkap' => 'required|min:8|max:70',
+                'kode_anggota' => 'required',
+                'username' => 'required|min:8',
+                'password' => 'required|min:8',
+                'status' => 'required',
+                // 'level' => 'required'
+            ]);
+
+            $values['password'] = bcrypt($request->password);
+
+            $data = User::where('user_id', $user_id)->update($values);
         return redirect()
             ->intended('/viewDataAnggota/'.$user_id)
             ->with('success', 'Data berhasil Diperbarui !');

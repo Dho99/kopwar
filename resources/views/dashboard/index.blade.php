@@ -6,6 +6,7 @@
       <div class="small-box bg-info">
         <div class="inner">
           <h3>{{count($users)}}</h3>
+          {{-- @dd($users) --}}
 
           <p>Pengguna</p>
         </div>

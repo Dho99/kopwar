@@ -10,14 +10,14 @@ use App\Models\User;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
-{   
+{
     // Pengurus
     public function index(){
         $angsuran = Angsuran::sum('terbayar');
         $pinjaman = Pinjaman::sum('jumlah');
         return view('dashboard.index', [
             'title' => 'Dashboard',
-            'users' => User::where('level', 'Anggota')->get(),
+            'users' => User::where('level', '0')->get(),
             'totalSimpanan' => Simpanan::sum('jumlah'),
             'totalPinjaman' => $pinjaman,
             'totalAngsuran' => $pinjaman - $angsuran,

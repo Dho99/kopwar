@@ -13,12 +13,12 @@
         <!-- Messages Dropdown Menu -->
             <li class="nav-item dropdown">
                 <a class="nav-item user-panel d-flex" data-toggle="dropdown" href="#">
-                    <div class="image">
+                    {{-- <div class="image">
                         <img src="{{asset('dist/img/user2-160x160.jpg')}}" class="img-circle elevation-2" alt="User Image">
-                    </div>
+                    </div> --}}
                     <div class="info mr-4">
                         <div class="d-block text-dark">
-                            {{auth()->user()->nama_lengkap}} 
+                            {{auth()->user()->nama_lengkap}}
                         <span class="dropdown-toggle ml-1"></span></div>
                     </div>
                 </a>

@@ -23,7 +23,7 @@
                 </div>
                     <select class="form-control select2bs4" name="user_id">
                       <option selected value="{{$data->user_id}}">{{$data->user->nama_lengkap}}</option>
-                      @foreach ($users as $user)                    
+                      @foreach ($users as $user)
                         <option value="{{$user->user_id}}">{{$user->nama_lengkap}}</option>
                       @endforeach
                     </select>
@@ -61,7 +61,7 @@
                     <input type="submit" class="btn btn-outline-primary w-50" onclick="return confirm('Apakah data dimasukkan dengan Benar?')">
                 </div>
             </div>
-                            
+
             @endforeach
         </form>
 

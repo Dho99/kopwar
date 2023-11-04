@@ -11,13 +11,14 @@
 
       <!-- Main content -->
       @foreach ($datas as $item)
+      {{-- @dd($datas) --}}
 
       <div class="invoice p-3 mb-3">
         <!-- title row -->
         <div class="row mb-3">
           <div class="col-12">
             <h4>
-              <img src="{{asset('dist/img/Logo Koperasi.png')}}" class="img-fluid col-1 d-inline-flex" alt=""> 
+              <img src="{{asset('dist/img/Logo Koperasi.png')}}" class="img-fluid col-1 d-inline-flex" alt="">
                 <span class="font-weight-bold align-items-center">
                   INVOICE
                 </span>
@@ -48,7 +49,7 @@
           <div class="col-sm-4 invoice-col">
             <b>Invoice </b>{{$item->pinjam->kode_pinjaman }}<br>
             {{-- <br> --}}
-            <b>Pinjaman ID:</b> {{$item->pinjam_id}}<br>
+            <b>Pinjaman ID:</b> {{md5($item->pinjam_id)}}<br>
             {{-- <b>Payment Due:</b> 2/22/2014<br> --}}
             <b>Kode Anggota:</b> {{$item->user->kode_anggota}}
           </div>
@@ -76,15 +77,15 @@
                 <td>@currency($item->pinjam->jumlah)</td>
                 <td>@currency($item->pinjam->rencana_bayar)</td>
                 {{-- <td>{{$item->keterangan}}</td> --}}
-                <td>@currency($item->terbayar)</td>
-                @if ($item->jumlah !== $item->terbayar)
+                <td>@currency($item->pinjam->terbayar)</td>
+                @if ($item->pinjam->jumlah < $item->terbayar)
                     <td class="text-danger">Belum Lunas</td>
                     @else
                     <td class="text-success">Lunas</td>
-                    
+
                 @endif
               </tr>
-  
+
               </tbody>
             </table>
           </div>
@@ -106,7 +107,7 @@
             </p>
           </div>
           <!-- /.col -->
-      
+
           <!-- /.col -->
         </div>
         <!-- /.row -->
@@ -124,5 +125,5 @@
       <!-- /.invoice -->
     </div><!-- /.col -->
   </div>
-  
+
 @endsection

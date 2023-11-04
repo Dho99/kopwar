@@ -17,7 +17,7 @@
         <div class="row mb-3">
           <div class="col-12">
             <h4>
-              <img src="{{asset('dist/img/Logo Koperasi.png')}}" class="img-fluid col-1 d-inline-flex" alt=""> 
+              <img src="{{asset('dist/img/Logo Koperasi.png')}}" class="img-fluid col-1 d-inline-flex" alt="">
                 <span class="font-weight-bold align-items-center">
                   INVOICE SIMPANAN
                 </span>
@@ -47,7 +47,8 @@
           <!-- /.col -->
           <div class="col-sm-4 invoice-col">
             <b>Kode Simpanan</b> {{$item->kode_simpanan}}<br>
-            <b>Kode Anggota:</b> {{$item->user->kode_anggota}}
+            <b>Kode Anggota:</b> {{$item->user->kode_anggota}}<br>
+            <b>ID Simpanan:</b> {{md5($item->id)}}
           </div>
           <!-- /.col -->
         </div>
@@ -66,10 +67,10 @@
               <tr>
                 <td>{{$item->user->nama_lengkap}}</td>
                 <td>{{$item->category->jenis_simpanan}}</td>
-                <td>{{$item->jumlah}}</td>
+                <td>@currency($item->jumlah)</td>
                 <td>{{$item->created_at->format('m-Y')}}</td>
               </tr>
-  
+
               </tbody>
             </table>
           </div>
@@ -91,7 +92,7 @@
             </p>
           </div>
           <!-- /.col -->
-      
+
           <!-- /.col -->
         </div>
         <!-- /.row -->
@@ -113,5 +114,5 @@
       <!-- /.invoice -->
     </div><!-- /.col -->
   </div>
-  
+
 @endsection

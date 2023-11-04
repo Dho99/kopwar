@@ -37,7 +37,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><b>Password</b></span>
                         </div>
-                        <input type="text" name="password" value="{{ $data->password }}" required class="form-control"
+                        <input type="text" name="password" value="" required class="form-control"
                             id="">
                     </div>
 
