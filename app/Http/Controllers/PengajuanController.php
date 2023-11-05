@@ -28,21 +28,31 @@ class PengajuanController extends Controller
 
         switch ($value) {
             case 'Simpanan':
-                $query = Pengajuan::where('category', 'Simpanan')
+                $query = Pengajuan::where([
+                    'category' =>'Simpanan',
+                    'status' => 'Pending'
+                    ])
                     ->with('user', 'simpan', 'user')
                     ->latest()
                     ->get();
                 return back()->with('simpanan', $query);
                 break;
             case 'Pinjaman':
-                $query = Pengajuan::where('category', 'Pinjaman')
+                $query = Pengajuan::where([
+                    'category'=>'Pinjaman',
+                    'status' => 'Pending'
+                    ])
                     ->with('user', 'user')
                     ->latest()
                     ->get();
                 return back()->with('pinjaman', $query);
                 break;
             case 'Angsuran':
-                $query = Pengajuan::where('category', 'Angsuran')
+                $query = Pengajuan::where([
+                    'category'=>'Angsuran',
+                    'status' => 'Pending'
+                    ])
+                    // ->groupBy('pinjam_id')
                     ->with('user', 'user')
                     ->latest()
                     ->get();
@@ -87,7 +97,7 @@ class PengajuanController extends Controller
                         'level' => (auth()->user()->level === 'Pengurus' ? 'Pengurus' : 'Anggota'),
                         'aktivitas' => 'Menyetujui Pengajuan ' . $item->simpan['jenis_simpanan'] . ' ' . $item->user->nama_lengkap,
                     ]);
-        
+
                 }
                 $data = Pengajuan::where('category', 'Simpanan')
                     ->latest()
@@ -125,28 +135,34 @@ class PengajuanController extends Controller
                 break;
 
             case 'Angsuran':
-                Pengajuan::where('id_pengajuan', $id_pengajuan)->update(['status' => 'Disetujui']);
-                $angsur = Pengajuan::where('id_pengajuan', $id_pengajuan)
-                    ->latest()
-                    ->get();
-                foreach ($angsur as $item) {
-                    $data = Angsuran::create([
-                        'pinjam_id' => $item->pinjam_id,
-                        'user_id' => $item->user_id,
-                        'user_id' => $item->user_id,
-                        'terbayar' => $item->terbayar,
+                $angsur = Pengajuan::where('id_pengajuan', $id_pengajuan)->first();
+                $angsur->update(['status' => 'Diseutujui']);
+                $cekPinjaman = Pinjaman::where('id', $angsur->pinjam_id)->first();
+                if(isset($cekPinjaman)){
+                    Angsuran::create([
+                        'pinjam_id' => $angsur->pinjam_id,
+                        'user_id' => $angsur->user_id,
+                        'terbayar' => $angsur->terbayar,
                     ]);
+
+
+                    $cekPinjaman->update([
+                        'terbayar' => $cekPinjaman->terbayar += $angsur->terbayar
+                    ]);
+
                     Log::create([
                         'kode_anggota' => auth()->user()->kode_anggota,
                         'nama_lengkap' => auth()->user()->nama_lengkap,
                         'level' => (auth()->user()->level === 'Pengurus' ? 'Pengurus' : 'Anggota'),
-                        'aktivitas' => 'Menyetujui Pengajuan Angsuran ' . $data->pinjam['kode_pinjaman'] . ' Dari ' . $data->user['nama_lengkap'],
+                        'aktivitas' => 'Menyetujui Pengajuan Angsuran ' . $cekPinjaman->kode_pinjaman . ' Dari ' . $cekPinjaman->user->nama_lengkap,
                     ]);
+                    $datas = Pengajuan::where('category', 'Angsuran')
+                        ->latest()
+                        ->get();
+                    return back()->with(['success' => 'Data berhasil Disimpan.', 'angsuran' => $datas]);
+                }else{
+                    return back()->with('message', 'Data gagal diproses');
                 }
-                $data = Pengajuan::where('category', 'Angsuran')
-                    ->latest()
-                    ->get();
-                return back()->with(['success' => 'Data berhasil Disimpan.', 'angsuran' => $data]);
                 break;
 
             default:
@@ -208,7 +224,7 @@ class PengajuanController extends Controller
                         'level' => (auth()->user()->level === 'Pengurus' ? 'Pengurus' : 'Anggota'),
                         'aktivitas' => 'Menolak Angsuran untuk Pinjaman '.$item->pinjam['kode_pinjaman'],
                     ]);
-                    
+
                 }
                 Pengajuan::where('id_pengajuan', $id_pengajuan)->update([
                     'status' => 'Ditolak',

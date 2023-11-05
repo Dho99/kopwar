@@ -211,8 +211,8 @@
                                         <td>{{ $item->pinjam->kode_pinjaman }}</td>
                                         <td>{{ $item->user->nama_lengkap }}</td>
                                         <td>@currency($item->pinjam->jumlah)</td>
-                                        <td>@currency($item->terbayar)</td>
-                                        <td>@currency($item->pinjam->jumlah - $item->terbayar)</td>
+                                        <td>@currency($item->pinjam->terbayar)</td>
+                                        <td>@currency($item->pinjam->jumlah - $item->pinjam->terbayar)</td>
                                         <td>{{ $item->created_at->format('d-m-Y') }}</td>
                                         @if ($item->status === 'Disetujui')
                                             <td class="text-success">

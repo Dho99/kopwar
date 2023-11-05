@@ -78,11 +78,10 @@
                 <td>@currency($item->pinjam->rencana_bayar)</td>
                 {{-- <td>{{$item->keterangan}}</td> --}}
                 <td>@currency($item->pinjam->terbayar)</td>
-                @if ($item->pinjam->jumlah < $item->terbayar)
+                @if ($item->pinjam->jumlah > $item->terbayar)
                     <td class="text-danger">Belum Lunas</td>
-                    @else
+                @else
                     <td class="text-success">Lunas</td>
-
                 @endif
               </tr>
 
@@ -96,11 +95,6 @@
         <div class="row">
           <!-- accepted payments column -->
           <div class="col-6 my-4">
-            {{-- <p class="lead">Payment Methods:</p>
-            <img src="../../dist/img/credit/visa.png" alt="Visa">
-            <img src="../../dist/img/credit/mastercard.png" alt="Mastercard">
-            <img src="../../dist/img/credit/american-express.png" alt="American Express">
-            <img src="../../dist/img/credit/paypal2.png" alt="Paypal"> --}}
 
             <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
               Harap Simpan Invoice ini dengan baik Untuk bukti Transaksi yang sah
@@ -115,7 +109,7 @@
         <!-- this row will not appear when printing -->
         <div class="row no-print mb-4">
           <div class="col-12">
-            <a href="/pinjaman" class="btn btn-outline-secondary">Kembali</a>
+            <a href="{{auth()->user()->level === 'Pengurus' ? '/pinjaman' : '/user/angsuran/'.auth()->user()->user_id}}" class="btn btn-outline-secondary">Kembali</a>
             <a href="" rel="noopener" target="_blank" onclick="window.print()" class="btn btn-secondary w-25 float-right"><i class="fas fa-print mr-2"></i> Print</a>
           </div>
         </div>

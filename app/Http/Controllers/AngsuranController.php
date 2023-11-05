@@ -97,6 +97,9 @@ class AngsuranController extends Controller
                         ->get();
                 } else {
                     $data = Angsuran::with('user', 'pinjam')
+                        ->whereHas('pinjam', function($query){
+                            $query->whereNotNull('kode_pinjaman');
+                        })
                         ->latest()
                         ->get();
                 }

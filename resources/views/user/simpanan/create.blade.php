@@ -12,7 +12,7 @@
                 <div class="input-group-prepend">
                 <span class="input-group-text"><b>Nama Anggota</b></span>
                 </div>
-                @foreach ($users as $item)        
+                @foreach ($users as $item)
                     <input type="text" name="user_id" class="form-control" value="{{$item->user_id}}" hidden>
                     <input type="text" readonly class="form-control" value="{{$item->nama_lengkap}}">
                 @endforeach
@@ -22,7 +22,7 @@
                 <div class="input-group-prepend">
                 <span class="input-group-text"><b>Jenis Simpanan</b></span>
                 </div>
-                    <select class="form-control select2bs4" name="id_jenis_simpanan">
+                    <select class="form-control" name="id_jenis_simpanan">
                       <option></option>
                      @foreach ($category as $item)
                         <option value="{{$item->id_jenis_simpanan}}">{{$item->jenis_simpanan}}</option>
@@ -36,7 +36,7 @@
                 </div>
                 <input type="text" class="form-control" required name="jumlah">
             </div>
-            
+
             <input type="hidden" name="category" value="Simpanan">
             <input type="hidden" name="user_id" value="{{ auth()->user()->user_id }}">
 

@@ -214,7 +214,7 @@
                             },
                             {
                                 "title": "Terbayar",
-                                "data": "terbayar",
+                                "data": "jumlah",
                                 "render": $.fn.dataTable.render.number(',', '.', 0, 'Rp. '),
                             },
                             {
@@ -341,14 +341,24 @@
                                 "data": "pinjam.kode_pinjaman",
                             },
                             {
-                                "title": "Jumlah",
+                                "title": "Jumlah Pinjam",
                                 "data": "pinjam.jumlah",
                                 "render": $.fn.dataTable.render.number(',', '.', 0, 'Rp. '),
                             },
                             {
-                                "title": "Terbayar",
+                                "title": "Terbayar ( per-sesi )",
                                 "data": "terbayar",
                                 "render": $.fn.dataTable.render.number(',', '.', 0, 'Rp. '),
+                            },
+                            {
+                                "title" : "Status",
+                                "data" : function(data, type, row){
+                                    if(data.pinjam.jumlah === data.pinjam.terbayar){
+                                        return "Lunas";
+                                    }else{
+                                        return "Belum Lunas"
+                                    }
+                                }
                             },
                             {
                                 "title": "Dibuat Pada",
