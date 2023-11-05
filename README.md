@@ -3,7 +3,7 @@
 
 Projek ini adalah projek yang dikembangkan untuk menyelesaikan tugas di sekolah dari pelajaran Mockup dan Pengembangan web
 
-Aplikasi ini masih tergolong simpel dan belum menyentuh hingga transaksi yang menggunakan Payment gateaway, transaksi di Aplikasi ini hanya dilakukan di tempat instansi atau tempat terjadinya transaksi menggunakan uang fisik
+Aplikasi ini masih tergolong simpel dan belum menyentuh hingga transaksi yang menggunakan Payment gateway, transaksi di Aplikasi ini hanya dilakukan di tempat instansi atau tempat terjadinya transaksi menggunakan uang fisik
 
 ## Authors
 
